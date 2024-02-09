@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="wled.css">
+    <title>WLEDPainter</title>
+</head>
+
+<body>
+    <div id="previewcontainer">
+        <canvas id="preview"></canvas>
+    </div>
+    <div id="loader">
+        <input type="file" id="imageInput" accept="image/*">
+    </div>
+    <div id="wledcontrols">
+        <input type="text" id="wledserver" value="http://wled">
+        <input type="text" id="ledCount" value="60">
+        <input type="range" min="0.5" max="10" value="0.5">
+        <input type="button" class="btn" id="run" value="run!" />
+        <input type="checkbox" id="repeat" name="∞" />∞
+        <input type="checkbox" id="direction" name="direction" />downwards
+    </div>
+    <script src="wled.js"></script>
+</body>
