@@ -9,5 +9,5 @@ TODO
 * make wled controls work
 * youtube video : howto use this thing
 
-
-<a href="wledpainter.html">Wledpaint</a>
+<a href="https://github.com/DrGonzales/WledPainter">Wledpainter on github</a>
+<a href="wledpainter.html">Wledpainter App</a>
