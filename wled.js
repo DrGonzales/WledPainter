@@ -17,10 +17,11 @@ function wledRequest(onoff, brightness, ledarray) {
     }
 }
 
-function paintonWled(context, imgdata, time, reverse = false) {
+function paintonWled(context, imgdata, time, startdelay, reverse = false) {
     var width = 0;
     const pc = canvasPainter(context);
-    var delay = setInterval(function () {
+    var delay = setInterval(() => setTimeout(()=>
+        {
         ledarray = []
         paintColnum(imgdata, pixelSize, width, function (r, g, b, x, y) {
             ledarray.push(`${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`);
@@ -38,7 +39,7 @@ function paintonWled(context, imgdata, time, reverse = false) {
             wledRequest(false, "", []);
             clearInterval(delay);
         }
-    }, time);
+    }, startdelay), time);
 }
 
 function canvasPainter(context) {
@@ -87,9 +88,9 @@ function loadImage(e) {
 
 function startWledProjection(e) {
     wledcontrols.hidden = true;
-    previewContext.fillStyle = `rgba(255 255 255)`;
+    previewContext.fillStyle = `rgba(0 0 0)`;
     previewContext.fillRect(0, 0, previewElement.width, previewElement.height);
-    paintonWled(previewContext, imagedata, 100, false); // Todo - Callback zum Anzeigen und Stoppen der Buttons
+    paintonWled(previewContext, imagedata, 100, 0, false); // Todo - Callback zum Anzeigen und Stoppen der Buttons
 }
 
 const pixelSize = 8;
@@ -105,7 +106,6 @@ const wledcontrols = document.getElementById('wledcontrols');
 wledcontrols.hidden = false;
 previewElement.hidden = false;
 var img = new Image();
-// img.crossOrigin  = "";
 loadbutton.addEventListener('change', loadImage);
 document.getElementById('run').addEventListener('click', startWledProjection);
 
@@ -118,5 +118,5 @@ img.onload = function () {
 };
 
 //Default picture
-img.src = "wleddefault.png";
+img.src = "wledpainter.png";
 

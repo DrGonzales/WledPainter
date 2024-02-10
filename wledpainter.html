@@ -14,12 +14,63 @@
         <input type="file" id="imageInput" accept="image/*">
     </div>
     <div id="wledcontrols">
-        <input type="text" id="wledserver" value="http://wled">
-        <input type="text" id="ledCount" value="60">
-        <input type="range" min="0.5" max="10" value="0.5">
-        <input type="button" class="btn" id="run" value="run!" />
-        <input type="checkbox" id="repeat" name="∞" />∞
-        <input type="checkbox" id="direction" name="direction" />downwards
+        <input type="button" id="run" value="run!" />
+        <input type="button" id="wledsetup" value="Setup" />
     </div>
+    <dialog id="wledsetupdialog">
+        <div class="container">
+            <h2>WLED-Setup</h2>
+            <label for="wledserver">WLED Hostname or Address:</label>
+            <input type="text" id="wledserver" value="http://wled">
+            <label for="ledCount">Number of LEDs:</label>
+            <input type="text" id="ledCount" value="60">
+            <label for="ledCount">LED orientation</label>
+            <label class="switch">
+                <input type="checkbox" id="direction">
+                <span class="slider"></span>
+            </label>
+            <span id="directionstate">upwards</span>
+            <label for="startdelay">Start delay in ms:</label>
+            <input type="number" id="startdelay" value="0">
+            <br />
+            <input type="button" id="wledsetupclose" value="Save" />
+        </div>
+    </dialog>
     <script src="wled.js"></script>
+    <script>
+        wledsetupdialog = document.getElementById("wledsetupdialog")
+        document.getElementById("wledsetup").addEventListener('click', () => { wledsetupdialog.showModal() })
+        document.getElementById("wledsetupclose").addEventListener('click', () => { savesetup(); wledsetupdialog.close() })
+        document.getElementById("direction").addEventListener('click', (e) => {
+            if (e.target.checked) {
+                document.getElementById("directionstate").textContent = "downwards"
+            } else {
+                document.getElementById("directionstate").textContent = "upwards"
+            }
+        })
+
+        addEventListener('load', ()=>{
+            let setup = {
+                wledserver: "http://wled",
+                ledCount: "60",
+                direction: false,
+                startdelay: 0
+            }
+            if (document.cookie.startsWith('wledsetup')){
+                setup = JSON.parse(document.cookie.split('=')[1])
+            } 
+            //TODO set setup....
+            console.dir(setup)
+        })
+
+        function savesetup() {
+            const setup = {
+                wledserver: document.getElementById("wledserver").value,
+                ledCount: document.getElementById("ledCount").value,
+                direction: document.getElementById("direction").checked,
+                startdelay: document.getElementById("startdelay").value
+            }
+            document.cookie = "wledsetup="+JSON.stringify(setup)+";expires=Fri, 31 Dec 9999 23:59:59 GMT;path=/;SameSite=Lax"
+        }
+    </script>
 </body>
