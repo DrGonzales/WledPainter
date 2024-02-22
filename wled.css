@@ -1,31 +1,49 @@
-* {
-	margin: 20;
+html,
+body{
+	height: 100%;
+	width: 100%;
+	margin: 0;
 	padding: 0;
-	box-sizing: border-box;
 	font-family: "Roboto", sans-serif;
-	color: #d6a2dd
-}
-
-body {
-	position: relative;
-	justify-content: center;
-	
-	min-height: 100vh;
+	color: #d6a2dd;
 	background: linear-gradient(to bottom, #000000, #1d0620);
 }
 
-
 .container {
-	padding: 2rem;
-	color:green;
+	display: grid;
+	justify-content: center;
+	grid-gap: 1rem;
+}
+
+#wledsetup {
+	justify-self: end;
 }
 
 #preview {
-	padding: 2rem;
-	background-color: #000000;
-	border-radius: 0.5rem;
+	border-radius: 0.3rem;
 }
+
+.button {
+	background-color: indigo;
+	padding: 1rem;
+	border-radius: 0.5rem;
+	transition: .2s;
+}
+
+#runcontrolls{
+	display: grid;
+	justify-content: left;
+	grid-gap: 1rem;
+	margin-top: 1.5rem;
+}
+
+.button:hover {
+	background-color: rgb(127, 71, 151);
+}
+
 dialog {
+	font-family: "Roboto", sans-serif;
+	color: #d6a2dd;
 	background: linear-gradient(to bottom, #42032d, #ac18c0);
 	border: 0.1rem solid black;
 	border-radius: 0.5rem;
@@ -33,16 +51,6 @@ dialog {
 
 dialog::backdrop {
 	background-color: hsla(240, 6%, 10%, 0.479);
-}
-
-
-label {
-	display: block;
-}
-
-input,
-label {
-	margin: 0.4rem 0;
 }
 
 .switch {

@@ -7,15 +7,25 @@
 </head>
 
 <body>
-    <div id="previewcontainer">
+    <div class="container">
+        <span id="wledsetup" class="button">WLED-Setup</span>
         <canvas id="preview"></canvas>
-    </div>
-    <div id="loader">
-        <input type="file" id="imageInput" accept="image/*">
-    </div>
-    <div id="wledcontrols">
-        <input type="button" id="run" value="run!" />
-        <input type="button" id="wledsetup" value="Setup" />
+        <section id="wledcontrolls">
+            <div id="upload">
+                <input type="file" id="imageInput" accept="image/*" hidden />
+                <label for="imageInput" class="button">Choose file</label>
+                <span id="filename"></span>
+            </div>
+            <div id="runcontrolls">
+                <span id="run" class="button">run!</span>
+                <div>
+                    <label for="speed">Speed, Colnum in seconds</label>
+                    <input type="range" min="75" max="500" step="5" value="100" id="speed">
+                </div>
+                <span id="infopic"></span>
+                <span id="inforun"></span>
+            </div>
+        </section>
     </div>
     <dialog id="wledsetupdialog">
         <div class="container">
@@ -31,8 +41,8 @@
                 <input type="checkbox" id="direction">
                 <span class="slider"></span>
             </label>
-            <span id="directionstate">upwards</span>
-            <label for="startdelay">Start delay in ms:</label>
+            <span id="directionstate">WLED Controller bottom</span>
+            <label for="startdelay">Start delay in secundes:</label>
             <input type="number" id="startdelay" value="0">
             <br />
             <input type="button" id="wledsetupclose" value="Save" />

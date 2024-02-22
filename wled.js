@@ -18,29 +18,31 @@ function wledRequest(onoff, brightness, ledarray) {
 }
 
 //paint picute colmunwise and send data to wled json api
-function paintonWled(context, imgdata, time, startdelay, reverse = false, Callback) {
+function paintonWled(context, imgdata, brightness, time, startdelay, reverse = false, Callback) {
     var width = 0;
     const pc = canvasPainter(context);
-    var delay = setInterval(() => setTimeout(() => {
-        ledarray = []
-        paintColnum(imgdata, pixelSize, width, function (r, g, b, x, y) {
-            ledarray.push(`${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`)
-            pc(r, g, b, x, y)
-        });
+    setTimeout(() => {
+        var delay = setInterval(() => {
+            ledarray = []
+            paintColnum(imgdata, pixelSize, width, function (r, g, b, x, y) {
+                ledarray.push(`${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`)
+                pc(r, g, b, x, y)
+            });
 
-        if (reverse === true) {
-            wledRequest(true, "", ledarray.reverse())
-        } else {
-            wledRequest(true, "", ledarray)
-        }
+            if (reverse === true) {
+                wledRequest(true, brightness, ledarray.reverse())
+            } else {
+                wledRequest(true, brightness, ledarray)
+            }
 
-        width++;
-        if (width == imgdata.width) {
-            wledRequest(false, "", [])
-            clearInterval(delay)
-            Callback()
-        }
-    }, startdelay), time)
+            width++;
+            if (width >= imgdata.width) {
+                wledRequest(false, "", [])
+                clearInterval(delay)
+                Callback()
+            }
+        }, time)
+    }, startdelay * 1000)
 }
 
 
@@ -80,6 +82,7 @@ function resizeImgetoCanvas(image, ledHight) {
 
 function loadImage(e) {
     var file = e.target.files[0]
+    document.getElementById("filename").textContent = e.target.files[0].name
     var reader = new FileReader()
     reader.onload = function (e) {
         img.src = e.target.result
@@ -90,13 +93,15 @@ function loadImage(e) {
 function startWledProjection(e) {
     startDelay = document.getElementById("startdelay").value
     direction = document.getElementById("direction").value
-    brightness = 100;
-    wledcontrols.hidden = true;
+    speed = document.getElementById("speed").value
+    brightness = 100
+
+    wledcontrolls.hidden = true;
     previewContext.fillStyle = `rgba(0 0 0)`
     previewContext.fillRect(0, 0, previewElement.width, previewElement.height)
-    paintonWled(previewContext, imagedata, brightness, startDelay, direction, () => {
+    paintonWled(previewContext, imagedata, brightness, speed, startDelay, direction, () => {
         previewElement.hidden = false
-        wledcontrols.hidden = false
+        wledcontrolls.hidden = false
     })
 }
 
@@ -106,7 +111,16 @@ function loader() {
     imagedata = resizeImgetoCanvas(img, document.getElementById("ledCount").value)
     paintScaledImage(previewContext, imagedata, pixelSize)
     previewElement.hidden = false
-    wledcontrols.hidden = false
+    wledcontrolls.hidden = false
+    setRunDetails()
+}
+
+function setRunDetails() {
+    speed = document.getElementById("speed").value / 1000
+    realwidht = (document.getElementById("ledLenght").value / imagedata.height * imagedata.width).toFixed(2)
+    realhight = document.getElementById("ledLenght").value
+    document.getElementById("infopic").textContent = `Picture size  ${imagedata.height}LED x ${imagedata.width}LED or ${realhight}cm x ${realwidht}cm.`
+    document.getElementById("inforun").textContent = `With ${speed.toFixed(2)} s per colnum it will runs ${(imagedata.width * speed).toFixed(2)} s for whole picture`
 }
 
 function savesetup() {
@@ -124,16 +138,17 @@ function savesetup() {
 const previewElement = document.getElementById('preview')
 const previewContext = previewElement.getContext('2d')
 const loadbutton = document.getElementById('imageInput')
-const wledcontrols = document.getElementById('wledcontrols')
+const wledcontrolls = document.getElementById('wledcontrolls')
 const wledsetupdialog = document.getElementById("wledsetupdialog")
 var img = new Image()
 
-wledcontrols.hidden = false
+
+wledcontrolls.hidden = false
 previewElement.hidden = false
 
 loadbutton.addEventListener('change', loadImage)
 document.getElementById('run').addEventListener('click', startWledProjection)
-
+document.getElementById("speed").oninput = setRunDetails
 //Handle loading Image.
 img.onload = function () {
     loader()
@@ -144,9 +159,9 @@ document.getElementById("wledsetup").addEventListener('click', () => { wledsetup
 document.getElementById("wledsetupclose").addEventListener('click', () => { savesetup(); wledsetupdialog.close() })
 document.getElementById("direction").addEventListener('click', (event) => {
     if (event.target.checked) {
-        document.getElementById("directionstate").textContent = "downwards"
+        document.getElementById("directionstate").textContent = "WLED Controller top"
     } else {
-        document.getElementById("directionstate").textContent = "upwards"
+        document.getElementById("directionstate").textContent = "LED Controller bottom"
     }
 })
 
@@ -167,5 +182,7 @@ addEventListener('load', () => {
     document.getElementById("ledLenght").value = setup.ledLenght
     document.getElementById("direction").checked = setup.direction
     document.getElementById("startdelay").value = setup.startdelay
+
+    document.getElementById("filename").textContent = "wledpainter.png"
     img.src = "wledpainter.png"
 })
