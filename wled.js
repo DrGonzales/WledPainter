@@ -1,9 +1,10 @@
 
 //call the wled json api
 function wledRequest(onoff, brightness, ledarray) {
+    const wledcontroller = document.getElementById("wledserver").value
     const request = { on: onoff, bri: `${brightness}`, seg: { i: ledarray } }
     try {
-        const response = fetch('http://192.168.64.42/json', {
+        const response = fetch(`${wledcontroller}/json`, {
             method: "POST",
             mode: "cors",
             cache: "no-cache",
@@ -94,7 +95,7 @@ function startWledProjection(e) {
     startDelay = document.getElementById("startdelay").value
     direction = document.getElementById("direction").value
     speed = document.getElementById("speed").value
-    brightness = 100
+    brightness = document.getElementById("brightness").value
 
     wledcontrolls.hidden = true;
     previewContext.fillStyle = `rgba(0 0 0)`
@@ -113,6 +114,7 @@ function loader() {
     previewElement.hidden = false
     wledcontrolls.hidden = false
     setRunDetails()
+    setBrightness()
 }
 
 function setRunDetails() {
@@ -121,6 +123,10 @@ function setRunDetails() {
     realhight = document.getElementById("ledLenght").value
     document.getElementById("infopic").textContent = `Picture size  ${imagedata.height}LED x ${imagedata.width}LED or ${realhight}cm x ${realwidht}cm.`
     document.getElementById("inforun").textContent = `With ${speed.toFixed(2)} s per colnum it will runs ${(imagedata.width * speed).toFixed(2)} s for whole picture`
+}
+
+function setBrightness() {
+    document.getElementById("bright").textContent = document.getElementById("brightness").value
 }
 
 function savesetup() {
@@ -149,6 +155,7 @@ previewElement.hidden = false
 loadbutton.addEventListener('change', loadImage)
 document.getElementById('run').addEventListener('click', startWledProjection)
 document.getElementById("speed").oninput = setRunDetails
+document.getElementById("brightness").oninput = setBrightness
 //Handle loading Image.
 img.onload = function () {
     loader()
