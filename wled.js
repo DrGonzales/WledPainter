@@ -6,7 +6,7 @@ function wledRequest(onoff, brightness, ledarray) {
     try {
         const response = fetch(`${wledcontroller}/json`, {
             method: "POST",
-            mode: "cors",
+            mode: "no-cors",
             cache: "no-cache",
             headers: {
                 "Content-Type": "application/json",
